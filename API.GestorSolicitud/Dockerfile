@@ -8,17 +8,17 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["API.GestorSolicitud/API.GestorSolicitud.csproj", "API.GestorSolicitud/"]
-RUN dotnet restore "./API.GestorSolicitud/./API.GestorSolicitud.csproj"
+COPY ["API.Facturador/API.Facturador.csproj", "API.Facturador/"]
+RUN dotnet restore "./API.Facturador/./API.Facturador.csproj"
 COPY . .
-WORKDIR "/src/API.GestorSolicitud"
-RUN dotnet build "./API.GestorSolicitud.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/API.Facturador"
+RUN dotnet build "./API.Facturador.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./API.GestorSolicitud.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./API.Facturador.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "API.GestorSolicitud.dll"]
+ENTRYPOINT ["dotnet", "API.Facturador.dll"]
